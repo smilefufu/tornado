@@ -190,11 +190,17 @@ def enable_pretty_logging(options=None, logger=None):
         logger = logging.getLogger()
     logger.setLevel(getattr(logging, options.logging.upper()))
     if options.log_file_prefix:
-        channel = logging.handlers.RotatingFileHandler(
-            filename=options.log_file_prefix,
-            maxBytes=options.log_file_max_size,
-            backupCount=options.log_file_num_backups)
-        channel.setFormatter(LogFormatter(color=False))
+        if not 'rotate' in options.as_dict():
+            channel = logging.handlers.RotatingFileHandler(
+                filename=options.log_file_prefix,
+                maxBytes=options.log_file_max_size,
+                backupCount=options.log_file_num_backups)
+            channel.setFormatter(LogFormatter(color=False))
+        else:
+            channel = logging.handlers.TimedRotatingFileHandler(
+                filename=options.log_file_prefix,
+                when=midnight)
+            channel.suffix = "%y%m%d"
         logger.addHandler(channel)
 
     if (options.log_to_stderr or
