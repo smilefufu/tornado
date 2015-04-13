@@ -199,7 +199,7 @@ def enable_pretty_logging(options=None, logger=None):
         else:
             channel = logging.handlers.TimedRotatingFileHandler(
                 filename=options.log_file_prefix,
-                when=midnight)
+                when='midnight')
             channel.suffix = "%y%m%d"
         logger.addHandler(channel)
 
